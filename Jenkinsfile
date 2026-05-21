@@ -9,6 +9,12 @@ pipeline {
             }
         }
 
+        stage('Copy HTML to Ansible') {
+            steps {
+                sh 'docker cp index.html ansible:/ansible/playbooks/index.html'
+            }
+        }
+
         stage('Run Ansible Playbook') {
             steps {
                 sh 'docker exec ansible ansible-playbook playbooks/edit-store.yml -i inventory/hosts.ini'
@@ -18,10 +24,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Done! Site updated successfully!'
         }
         failure {
-            echo 'Pipeline failed — check the logs above'
+            echo 'Something went wrong — check logs above'
         }
     }
 }
